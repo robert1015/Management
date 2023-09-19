@@ -2,7 +2,7 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 public class Main_step_3 {
-    static String stockDatabaseFile = "Database.csv";
+    static String stockDatabaseFile = "trading-app/src/main/java/Database.csv";
     public static void main(String[] args) {
         System.out.println("株式取引管理システムを開始します。");
         boolean running = true;

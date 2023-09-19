@@ -46,7 +46,7 @@ public class Main_step_2 {
     static void ShowAllStocks() {
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader("Database.csv")); //读文件
+            reader = new BufferedReader(new FileReader("trading-app/src/main/java/Database.csv")); //读文件
             reader.readLine();
             String line;
             System.out.println("|" + "=".repeat(61) + "|" );
