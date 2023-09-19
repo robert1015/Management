@@ -54,9 +54,7 @@ public class Main_step_2 {
             System.out.println("| Code | Product Name              | Market   | Shares Issued |");
             System.out.println("|------+---------------------------+----------+---------------|");
             while((line = reader.readLine()) != null) { //逐行读数据
-//                System.out.println(line);
                 String[] data = line.split("\t");
-//                System.out.println(data[0]);
                 Stock thisStock = new Stock(); //存储每一行数据对应的股票
                 thisStock.code = data[0];
                 thisStock.productName = data[1];
