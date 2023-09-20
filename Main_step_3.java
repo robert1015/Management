@@ -75,6 +75,20 @@ public class Main_step_3 {
         System.out.println("|" + "=".repeat(61) + "|" );
     }
 
+    static boolean isValidName(String name) {
+        for(int i = 0;i < name.length();i ++) {
+            char c = name.charAt(i);
+            if(!(c >= '0' && c <= '9') &&
+            !(c >= 'a' && c <= 'z') &&
+            !(c >= 'A' && c <= 'Z') &&
+            c != '.' && c != ' ') {
+                return false;
+            }
+            if(i < name.length() - 1 && c == ' ' && name.charAt(i+1) == ' ') return false;
+        }
+        return true;
+    }
+
     static void AddNewStock(StockListManager stockManager) {
         String[] data = new String[4];
         Scanner sc = new Scanner(System.in);
@@ -89,9 +103,11 @@ public class Main_step_3 {
                 return;
             if(stockManager.containsStockByName(productName)) {
                 System.out.println("ERROR: この銘柄名はすでに存在している。");
+            } else if(!isValidName(productName)) {
+                System.out.println("不正な銘柄名の入力。「a-z, A-Z, 0-9, .と非連続スペース」");
             } else {
-                data[1] = productName;
-                break;
+                    data[1] = productName;
+                    break;
             }
         }
 
