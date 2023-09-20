@@ -6,7 +6,7 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 public class Main {
-    static String stockDatabaseFile = "trading-app/src/main/java/Database.csv";
+    static String stockDatabaseFile = "Database.csv";
     static String transactionDatabaseFile = "Transaction.csv";
     public static void main(String[] args) {
         System.out.println("株式取引管理システムを開始します。");
@@ -16,6 +16,9 @@ public class Main {
             stockManager = new StockListManager(stockDatabaseFile);
         }catch(IOException e) {
             System.out.println("データベースのファイルは存在しません。");
+            return;
+        }catch(Exception e) {
+            System.out.println("ERROR: データベースの読み込みに失敗しました。");
             return;
         }
         StockTransactionManager transactionManager = new StockTransactionManager(transactionDatabaseFile);
@@ -66,14 +69,14 @@ public class Main {
         // 4+2 25+2 8+2 15+2
         System.out.println("| Code | Product Name              | Market   | Shares Issued |");
         System.out.println("|------+---------------------------+----------+---------------|");
-        for(Stock stock: stockListManager.stocks) { //逐行读数据
-            System.out.print("| " + stock.code + " ");
-            if(stock.productName.length() > 22)
-                System.out.print("| " + stock.productName.substring(0,22) + "... ");
+        for(Stock stock: stockListManager.getStocks()) { //逐行读数据
+            System.out.print("| " + stock.getCode() + " ");
+            if(stock.getProductName().length() > 22)
+                System.out.print("| " + stock.getProductName().substring(0,22) + "... ");
             else
-                System.out.print("| " + stock.productName + " ".repeat(26-stock.productName.length()));
+                System.out.print("| " + stock.getProductName() + " ".repeat(26-stock.getProductName().length()));
             DecimalFormat df = new DecimalFormat("#,###");
-            System.out.printf("| %-8s | %13s |\n", stock.market, df.format(stock.sharesIssued));
+            System.out.printf("| %-8s | %13s |\n", stock.getMarket(), df.format(stock.getSharesIssued()));
         }
         System.out.println("|" + "=".repeat(61) + "|" );
     }
@@ -185,7 +188,7 @@ public class Main {
                 System.out.println("ERROR: 入力された銘柄名は登録されてない。");
             } else break;
         }
-        String code = stockManager.getByName(productName).code;
+        String code = stockManager.getByName(productName).getCode();
 
         boolean tradeType;
         while(true) {

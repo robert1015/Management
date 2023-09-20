@@ -62,19 +62,15 @@ public class Main_step_2 {
             System.out.println("|------+---------------------------+----------+---------------|");
             do {
                 String[] data = line.split("\t");
-                Stock thisStock = new Stock(); //存储每一行数据对应的股票
-                thisStock.code = data[0];
-                thisStock.productName = data[1];
-                thisStock.market = data[2];
-                thisStock.sharesIssued = Integer.parseInt(data[3]);
+                Stock stock = new Stock(data); //存储每一行数据对应的股票
 
-                System.out.print("| " + thisStock.code + " ");
-                if(thisStock.productName.length() > 22)
-                    System.out.print("| " + thisStock.productName.substring(0,22) + "... ");
+                System.out.print("| " + stock.getCode() + " ");
+                if(stock.getProductName().length() > 22)
+                    System.out.print("| " + stock.getProductName().substring(0,22) + "... ");
                 else
-                    System.out.print("| " + thisStock.productName + " ".repeat(26-thisStock.productName.length()));
+                    System.out.print("| " + stock.getProductName() + " ".repeat(26-stock.getProductName().length()));
                 DecimalFormat df = new DecimalFormat("#,###");
-                System.out.printf("| %-8s | %13s |\n", thisStock.market, df.format(thisStock.sharesIssued));
+                System.out.printf("| %-8s | %13s |\n", stock.getMarket(), df.format(stock.getSharesIssued()));
             } while((line = reader.readLine()) != null); //逐行读数据
             System.out.println("|" + "=".repeat(61) + "|" );
             reader.close();

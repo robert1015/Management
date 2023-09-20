@@ -13,6 +13,9 @@ public class Main_step_3 {
         }catch(IOException e) {
             System.out.println("データベースのファイルは存在しません。");
             return;
+        }catch(Exception e) {
+            System.out.println("ERROR: データベースの読み込みに失敗しました。");
+            return;
         }
         while(running) {
             System.out.println("操作するメニューを選んでください。");
@@ -52,7 +55,7 @@ public class Main_step_3 {
         System.out.println("アプリケーションを終了します。");
     }
     static void ShowAllStocks(StockListManager stockListManager) {
-        if(stockListManager.stocks.size() == 0) {
+        if(stockListManager.getStocks().size() == 0) {
             System.out.println("ERROR: 登録された銘柄マスタはありません。");
             return;
         }
@@ -60,14 +63,14 @@ public class Main_step_3 {
         // 4+2 25+2 8+2 15+2
         System.out.println("| Code | Product Name              | Market   | Shares Issued |");
         System.out.println("|------+---------------------------+----------+---------------|");
-        for(Stock stock: stockListManager.stocks) { //逐行读数据
-            System.out.print("| " + stock.code + " ");
-            if(stock.productName.length() > 22)
-                System.out.print("| " + stock.productName.substring(0,22) + "... ");
+        for(Stock stock: stockListManager.getStocks()) { //逐行读数据
+            System.out.print("| " + stock.getCode() + " ");
+            if(stock.getProductName().length() > 22)
+                System.out.print("| " + stock.getProductName().substring(0,22) + "... ");
             else
-                System.out.print("| " + stock.productName + " ".repeat(26-stock.productName.length()));
+                System.out.print("| " + stock.getProductName() + " ".repeat(26-stock.getProductName().length()));
             DecimalFormat df = new DecimalFormat("#,###");
-            System.out.printf("| %-8s | %13s |\n", stock.market, df.format(stock.sharesIssued));
+            System.out.printf("| %-8s | %13s |\n", stock.getMarket(), df.format(stock.getSharesIssued()));
         }
         System.out.println("|" + "=".repeat(61) + "|" );
     }
