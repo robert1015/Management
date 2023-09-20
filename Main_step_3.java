@@ -1,9 +1,13 @@
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.text.DecimalFormat;
 
 public class Main_step_3 {
     static String stockDatabaseFile = "Database.csv";
+    static String transactionDatabaseFile = "Transaction.csv";
     public static void main(String[] args) {
         System.out.println("株式取引管理システムを開始します。");
         boolean running = true;
@@ -15,6 +19,13 @@ public class Main_step_3 {
             return;
         }catch(Exception e) {
             System.out.println("ERROR: データベースの読み込みに失敗しました。");
+            return;
+        }
+        StockTransactionManager transactionManager;
+        try {
+            transactionManager = new StockTransactionManager(transactionDatabaseFile);
+        }catch (IOException e) {
+            System.out.println("取引記録のファイルは存在しません。");
             return;
         }
         while(running) {
@@ -42,6 +53,11 @@ public class Main_step_3 {
                 } else if(inputNum == 2) {
                     System.out.println("「銘柄マスタ新規登録」が選択されました。");
                     AddNewStock(stockManager);
+                    System.out.println("---");
+                    break;
+                }  else if(inputNum == 3) {
+                    System.out.println("「取引を登録」が選択されました。");
+                    AddNewTransAction(stockManager, transactionManager);
                     System.out.println("---");
                     break;
                 } else if(inputNum == 9) {
@@ -163,6 +179,93 @@ public class Main_step_3 {
         }
         stockManager.AddStock(new Stock(data));
         System.out.println(data[1] + "を新規銘柄として登録しました");
+    }
+
+    static void AddNewTransAction(StockListManager stockManager, StockTransactionManager transactionManager) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("新規取引を登録します");
+        LocalDateTime time;
+        while(true) {
+            System.out.print("取引日時（yyyy-MM-dd HH:mm）> ");
+            String timeStr = sc.nextLine();
+            if(timeStr.equals("exit"))
+                return;
+            try {
+                time = LocalDateTime.parse(timeStr, StockTransactionManager.formatter);
+                if(time.isAfter(LocalDateTime.now())) {
+                    System.out.println("ERROR: 取引日時の入力値は現在時間よりも過去の日時である必要がある。");
+                }else if(!(time.getDayOfWeek().getValue()>=1 &&
+                        time.getDayOfWeek().getValue()<=5 &&
+                        time.getHour()>=9 &&
+                        time.getHour()<15)) {
+                    System.out.println("ERROR: 取引日時は平日 (月曜〜金曜) の 9:00〜15:00 の間に収まるもののみを受け付けてください");
+                } else break;
+            } catch (Exception e) {
+                System.out.println("ERROR: 取引日時の形式は\"yyyy-MM-dd HH:mm\"");
+            }
+        }
+
+        String productName;
+        while(true) {
+            System.out.print("銘柄名> ");
+            productName = sc.nextLine();
+            if(productName.equals("exit"))
+                return;
+            if(!stockManager.containsStockByName(productName)) {
+                System.out.println("ERROR: 入力された銘柄名は登録されてない。");
+            } else break;
+        }
+        String code = stockManager.getByName(productName).getCode();
+
+        boolean tradeType;
+        while(true) {
+            System.out.print("売買区分「買/売」> ");
+            String tradeTypeStr = sc.nextLine();
+            if(tradeTypeStr.equals("exit"))
+                return;
+            if(tradeTypeStr.equals("売")) {
+                tradeType = false;
+                break;
+            } else if(tradeTypeStr.equals("買")) {
+                tradeType = true;
+                break;
+            }else {
+                System.out.println("ERROR: 入力は「買/売」でなければならない。");
+            }
+        }
+
+        int amount;
+        while (true) {
+            System.out.print("数量> ");
+            String input = sc.nextLine();
+            if (input.equals("exit"))
+                return;
+            try {
+                amount = Integer.parseInt(input);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: 数量は整数で入力してください。");
+            }
+        }
+
+        BigDecimal pricePerShare;
+        while (true) {
+            System.out.print("取引単価> ");
+            String input = sc.nextLine();
+            if (input.equals("exit"))
+                return;
+            try {
+                pricePerShare = BigDecimal.valueOf(Float.parseFloat(input));
+                pricePerShare = pricePerShare.setScale(2, RoundingMode.HALF_UP);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: 取引単価は数字で入力してください。");
+            }
+        }
+        Transaction log = new Transaction(time, productName, code, tradeType, amount, pricePerShare);
+        transactionManager.AddNewTransaction(log);
+
+        System.out.println("取引記録を新規銘柄として登録しました");
     }
 
 }

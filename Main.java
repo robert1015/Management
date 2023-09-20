@@ -21,7 +21,13 @@ public class Main {
             System.out.println("ERROR: データベースの読み込みに失敗しました。");
             return;
         }
-        StockTransactionManager transactionManager = new StockTransactionManager(transactionDatabaseFile);
+        StockTransactionManager transactionManager;
+        try {
+            transactionManager = new StockTransactionManager(transactionDatabaseFile);
+        }catch (IOException e) {
+            System.out.println("取引記録のファイルは存在しません。");
+            return;
+        }
         while(running) {
             System.out.println("操作するメニューを選んでください。");
             System.out.println("  1. 銘柄マスタ一覧表示");
@@ -49,7 +55,7 @@ public class Main {
                     AddNewStock(stockManager);
                     System.out.println("---");
                     break;
-                } else if(inputNum == 3) {
+                }  else if(inputNum == 3) {
                     System.out.println("「取引を登録」が選択されました。");
                     AddNewTransAction(stockManager, transactionManager);
                     System.out.println("---");
@@ -65,6 +71,10 @@ public class Main {
         System.out.println("アプリケーションを終了します。");
     }
     static void ShowAllStocks(StockListManager stockListManager) {
+        if(stockListManager.getStocks().size() == 0) {
+            System.out.println("ERROR: 登録された銘柄マスタはありません。");
+            return;
+        }
         System.out.println("|" + "=".repeat(61) + "|" );
         // 4+2 25+2 8+2 15+2
         System.out.println("| Code | Product Name              | Market   | Shares Issued |");
@@ -81,6 +91,20 @@ public class Main {
         System.out.println("|" + "=".repeat(61) + "|" );
     }
 
+    static boolean isValidName(String name) {
+        for(int i = 0;i < name.length();i ++) {
+            char c = name.charAt(i);
+            if(!(c >= '0' && c <= '9') &&
+                    !(c >= 'a' && c <= 'z') &&
+                    !(c >= 'A' && c <= 'Z') &&
+                    c != '.' && c != ' ') {
+                return false;
+            }
+            if(i < name.length() - 1 && c == ' ' && name.charAt(i+1) == ' ') return false;
+        }
+        return true;
+    }
+
     static void AddNewStock(StockListManager stockManager) {
         String[] data = new String[4];
         Scanner sc = new Scanner(System.in);
@@ -95,6 +119,8 @@ public class Main {
                 return;
             if(stockManager.containsStockByName(productName)) {
                 System.out.println("ERROR: この銘柄名はすでに存在している。");
+            } else if(!isValidName(productName)) {
+                System.out.println("不正な銘柄名の入力。「a-z, A-Z, 0-9, .と非連続スペース」");
             } else {
                 data[1] = productName;
                 break;
@@ -154,6 +180,7 @@ public class Main {
         stockManager.AddStock(new Stock(data));
         System.out.println(data[1] + "を新規銘柄として登録しました");
     }
+
     static void AddNewTransAction(StockListManager stockManager, StockTransactionManager transactionManager) {
         Scanner sc = new Scanner(System.in);
         System.out.println("新規取引を登録します");
