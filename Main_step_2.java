@@ -46,8 +46,11 @@ public class Main_step_2 {
     static void ShowAllStocks() {
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader("trading-app/src/main/java/Database.csv")); //读文件
-            reader.readLine();
+            reader = new BufferedReader(new FileReader("Database.csv")); //读文件
+            if(reader.readLine() == null) {
+                System.out.println("ERROR: 登録された銘柄マスタはありません。");
+                return;
+            }
             String line;
             if((line = reader.readLine()) == null) {
                 System.out.println("ERROR: 登録された銘柄マスタはありません。");
