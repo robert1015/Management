@@ -1,17 +1,17 @@
 import java.io.*;
 import java.time.format.DateTimeFormatter;
 
-public class StockTransactionManager {
+public class StockTradeManager {
 
     static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private final String transactionDatabaseFile;
-    public StockTransactionManager(String transactionDatabaseFile) throws IOException{
-        this.transactionDatabaseFile = transactionDatabaseFile;
-        FileReader reader = new FileReader(transactionDatabaseFile);
+    private final String tradeDatabaseFile;
+    public StockTradeManager(String tradeDatabaseFile) throws IOException{
+        this.tradeDatabaseFile = tradeDatabaseFile;
+        FileReader reader = new FileReader(tradeDatabaseFile);
     }
-    public void AddNewTransaction(Transaction log) {
+    public void AddNewTransaction(Trade log) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(transactionDatabaseFile, true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tradeDatabaseFile, true));
             writer.newLine();
             String entry = "";
             entry += log.getTimestamp().format(formatter);

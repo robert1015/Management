@@ -21,9 +21,9 @@ public class Main {
             System.out.println("ERROR: データベースの読み込みに失敗しました。");
             return;
         }
-        StockTransactionManager transactionManager;
+        StockTradeManager tradeManager;
         try {
-            transactionManager = new StockTransactionManager(transactionDatabaseFile);
+            tradeManager = new StockTradeManager(transactionDatabaseFile);
         }catch (IOException e) {
             System.out.println("取引記録のファイルは存在しません。");
             return;
@@ -57,7 +57,7 @@ public class Main {
                     break;
                 }  else if(inputNum == 3) {
                     System.out.println("「取引を登録」が選択されました。");
-                    AddNewTransAction(stockManager, transactionManager);
+                    AddNewTransAction(stockManager, tradeManager);
                     System.out.println("---");
                     break;
                 } else if(inputNum == 9) {
@@ -181,7 +181,7 @@ public class Main {
         System.out.println(data[1] + "を新規銘柄として登録しました");
     }
 
-    static void AddNewTransAction(StockListManager stockManager, StockTransactionManager transactionManager) {
+    static void AddNewTransAction(StockListManager stockManager, StockTradeManager transactionManager) {
         Scanner sc = new Scanner(System.in);
         System.out.println("新規取引を登録します");
         LocalDateTime time;
@@ -191,7 +191,7 @@ public class Main {
             if(timeStr.equals("exit"))
                 return;
             try {
-                time = LocalDateTime.parse(timeStr, StockTransactionManager.formatter);
+                time = LocalDateTime.parse(timeStr, StockTradeManager.formatter);
                 if(time.isAfter(LocalDateTime.now())) {
                     System.out.println("ERROR: 取引日時の入力値は現在時間よりも過去の日時である必要がある。");
                 }else if(!(time.getDayOfWeek().getValue()>=1 &&
@@ -262,7 +262,7 @@ public class Main {
                 System.out.println("ERROR: 取引単価は数字で入力してください。");
             }
         }
-        Transaction log = new Transaction(time, productName, code, tradeType, amount, pricePerShare);
+        Trade log = new Trade(time, productName, code, tradeType, amount, pricePerShare);
         transactionManager.AddNewTransaction(log);
 
         System.out.println("取引記録を新規銘柄として登録しました");

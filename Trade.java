@@ -3,14 +3,14 @@ import java.time.LocalDateTime;
 
 
 
-public class Transaction {
+public class Trade {
     private LocalDateTime timestamp;
     private String productName;
     private String code;
     private boolean tradeType; //sell: false, buy: true
     private int amount;
     private BigDecimal pricePerShare;
-    public Transaction(LocalDateTime timestamp,
+    public Trade(LocalDateTime timestamp,
                                   String productName,
                                   String code,
                                   boolean tradeType,
