@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -5,12 +6,18 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 public class Main {
-    static String stockDatabaseFile = "Database.csv";
+    static String stockDatabaseFile = "trading-app/src/main/java/Database.csv";
     static String transactionDatabaseFile = "Transaction.csv";
     public static void main(String[] args) {
         System.out.println("株式取引管理システムを開始します。");
         boolean running = true;
-        StockListManager stockManager = new StockListManager(stockDatabaseFile);
+        StockListManager stockManager;
+        try {
+            stockManager = new StockListManager(stockDatabaseFile);
+        }catch(IOException e) {
+            System.out.println("データベースのファイルは存在しません。");
+            return;
+        }
         StockTransactionManager transactionManager = new StockTransactionManager(transactionDatabaseFile);
         while(running) {
             System.out.println("操作するメニューを選んでください。");
@@ -21,8 +28,7 @@ public class Main {
             while(true) {
                 System.out.print("入力してください: ");
                 Scanner sc = new Scanner(System.in);
-                String input = "";
-                input = sc.next();
+                String input = sc.next();
                 int inputNum;
                 try {
                     inputNum = Integer.parseInt(input); //把一个String转换成Int，如果不是整数的话报错。
@@ -219,7 +225,7 @@ public class Main {
             if (input.equals("exit"))
                 return;
             try {
-                pricePerShare = new BigDecimal(Float.parseFloat(input));
+                pricePerShare = BigDecimal.valueOf(Float.parseFloat(input));
                 pricePerShare = pricePerShare.setScale(2, RoundingMode.HALF_UP);
                 break;
             } catch (NumberFormatException e) {

@@ -1,12 +1,19 @@
+import java.io.IOException;
 import java.util.*;
 import java.text.DecimalFormat;
 
 public class Main_step_3 {
-    static String stockDatabaseFile = "trading-app/src/main/java/Database.csv";
+    static String stockDatabaseFile = "Database.csv";
     public static void main(String[] args) {
         System.out.println("株式取引管理システムを開始します。");
         boolean running = true;
-        StockListManager stockManager = new StockListManager(stockDatabaseFile);
+        StockListManager stockManager;
+        try {
+            stockManager = new StockListManager(stockDatabaseFile);
+        }catch(IOException e) {
+            System.out.println("データベースのファイルは存在しません。");
+            return;
+        }
         while(running) {
             System.out.println("操作するメニューを選んでください。");
             System.out.println("  1. 銘柄マスタ一覧表示");

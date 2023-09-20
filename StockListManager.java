@@ -7,29 +7,24 @@ public class StockListManager {
     private final Map<String, Stock> codeIndex;
     private final Map<String, Stock> nameIndex;
 
-    StockListManager(String stockDatabaseFile) {
+    StockListManager(String stockDatabaseFile) throws IOException {
         this.stockDatabaseFile = stockDatabaseFile;
         stocks = new ArrayList<>();
         codeIndex = new HashMap<>();
         nameIndex = new HashMap<>();
         LoadAllStocks();
-
     }
-    private void LoadAllStocks() {
+    private void LoadAllStocks() throws IOException {
         BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(this.stockDatabaseFile)); //读文件
-            reader.readLine();
-            String entry;
-            while((entry = reader.readLine()) != null) { //逐行读数据
-                String[] data = entry.split("\t");
-                Stock stock = new Stock(data);
-                stocks.add(stock);
-                codeIndex.put(stock.code, stock);
-                nameIndex.put(stock.productName, stock);
-            }
-        } catch (IOException e) {
-            System.out.println("データベースのファイルは存在しません。");
+        reader = new BufferedReader(new FileReader(this.stockDatabaseFile)); //读文件
+        reader.readLine();
+        String entry;
+        while((entry = reader.readLine()) != null) { //逐行读数据
+            String[] data = entry.split("\t");
+            Stock stock = new Stock(data);
+            stocks.add(stock);
+            codeIndex.put(stock.code, stock);
+            nameIndex.put(stock.productName, stock);
         }
     }
 
