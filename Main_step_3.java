@@ -45,6 +45,10 @@ public class Main_step_3 {
         System.out.println("アプリケーションを終了します。");
     }
     static void ShowAllStocks(StockListManager stockListManager) {
+        if(stockListManager.stocks.size() == 0) {
+            System.out.println("ERROR: 登録された銘柄マスタはありません。");
+            return;
+        }
         System.out.println("|" + "=".repeat(61) + "|" );
         // 4+2 25+2 8+2 15+2
         System.out.println("| Code | Product Name              | Market   | Shares Issued |");
