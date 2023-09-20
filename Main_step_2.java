@@ -49,11 +49,15 @@ public class Main_step_2 {
             reader = new BufferedReader(new FileReader("trading-app/src/main/java/Database.csv")); //读文件
             reader.readLine();
             String line;
+            if((line = reader.readLine()) == null) {
+                System.out.println("ERROR: 登録された銘柄マスタはありません。");
+                return;
+            }
             System.out.println("|" + "=".repeat(61) + "|" );
             // 4+2 25+2 8+2 15+2
             System.out.println("| Code | Product Name              | Market   | Shares Issued |");
             System.out.println("|------+---------------------------+----------+---------------|");
-            while((line = reader.readLine()) != null) { //逐行读数据
+            do {
                 String[] data = line.split("\t");
                 Stock thisStock = new Stock(); //存储每一行数据对应的股票
                 thisStock.code = data[0];
@@ -68,7 +72,7 @@ public class Main_step_2 {
                     System.out.print("| " + thisStock.productName + " ".repeat(26-thisStock.productName.length()));
                 DecimalFormat df = new DecimalFormat("#,###");
                 System.out.printf("| %-8s | %13s |\n", thisStock.market, df.format(thisStock.sharesIssued));
-            }
+            } while((line = reader.readLine()) != null); //逐行读数据
             System.out.println("|" + "=".repeat(61) + "|" );
         } catch (IOException e) {
             System.out.println("データベースのファイルは存在しません。");
