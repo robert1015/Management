@@ -15,7 +15,7 @@ public class Main {
         try {
             stockManager = new StockListManager(stockDatabaseFile);
         }catch(IOException e) {
-            System.out.println("データベースのファイルは存在しません。");
+            System.out.println("ERROR: データベースのファイルは存在しません。");
             return;
         }catch(Exception e) {
             System.out.println("ERROR: データベースの読み込みに失敗しました。");
@@ -25,14 +25,14 @@ public class Main {
         try {
             tradeManager = new StockTradeManager(transactionDatabaseFile);
         }catch (IOException e) {
-            System.out.println("取引記録のファイルは存在しません。");
+            System.out.println("ERROR: 取引記録のファイルは存在しません。");
             return;
         }
         while(running) {
             System.out.println("操作するメニューを選んでください。");
             System.out.println("  1. 銘柄マスタ一覧表示");
             System.out.println("  2. 銘柄マスタ新規登録");
-            System.out.println("  3. 取引を登録");
+            System.out.println("  3. 取引登録");
             System.out.println("  9. アプリケーションを終了する");
             while(true) {
                 System.out.print("入力してください: ");
@@ -56,7 +56,7 @@ public class Main {
                     System.out.println("---");
                     break;
                 }  else if(inputNum == 3) {
-                    System.out.println("「取引を登録」が選択されました。");
+                    System.out.println("「取引登録」が選択されました。");
                     AddNewTransAction(stockManager, tradeManager);
                     System.out.println("---");
                     break;
@@ -242,9 +242,15 @@ public class Main {
                 return;
             try {
                 amount = Integer.parseInt(input);
-                break;
+                if(amount % 100 != 0) {
+                    System.out.println("ERROR: 取引数量は100株単位で扱わなければならない。");
+                } else if(amount <= 0) { //交易数量是个正数
+                    System.out.println("ERROR: 取引数量は正数で入力してください。");
+                } else {
+                    break;
+                }
             } catch (NumberFormatException e) {
-                System.out.println("ERROR: 数量は整数で入力してください。");
+                System.out.println("ERROR: 取引数量は整数で入力してください。");
             }
         }
 
@@ -255,9 +261,14 @@ public class Main {
             if (input.equals("exit"))
                 return;
             try {
-                pricePerShare = BigDecimal.valueOf(Float.parseFloat(input));
-                pricePerShare = pricePerShare.setScale(2, RoundingMode.HALF_UP);
-                break;
+                double price = Double.parseDouble(input);
+                if(price <= 0) { //判断交易单价是个正数
+                    System.out.println("ERROR: 取引単価は正数で入力してください。");
+                } else {
+                    pricePerShare = BigDecimal.valueOf(price);
+                    pricePerShare = pricePerShare.setScale(2, RoundingMode.HALF_UP);
+                    break;
+                }
             } catch (NumberFormatException e) {
                 System.out.println("ERROR: 取引単価は数字で入力してください。");
             }
