@@ -74,6 +74,7 @@ public class Main_step_2 {
                 System.out.printf("| %-8s | %13s |\n", thisStock.market, df.format(thisStock.sharesIssued));
             } while((line = reader.readLine()) != null); //逐行读数据
             System.out.println("|" + "=".repeat(61) + "|" );
+            reader.close();
         } catch (IOException e) {
             System.out.println("データベースのファイルは存在しません。");
         }
