@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 
 public class Trade {
     private LocalDateTime timestamp;
-    private String productName;
+    private ProductName productName;
     private String code;
     private boolean tradeType; //sell: false, buy: true
     private int amount;
     private BigDecimal pricePerShare;
     public Trade(LocalDateTime timestamp,
-                                  String productName,
+                                  ProductName productName,
                                   String code,
                                   boolean tradeType,
                                   int amount,
@@ -27,41 +27,22 @@ public class Trade {
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
+        return productName.getValue();
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public int getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
 
     public BigDecimal getPricePerShare() {
         return pricePerShare;
-    }
-
-    public void setPricePerShare(BigDecimal pricePerShare) {
-        this.pricePerShare = pricePerShare;
     }
 
     public boolean isSell() {
@@ -70,6 +51,4 @@ public class Trade {
     public boolean isBuy() {
         return tradeType;
     }
-    public void Sell() {tradeType = false;}
-    public void Buy() {tradeType = true;}
 }

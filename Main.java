@@ -91,46 +91,33 @@ public class Main {
         System.out.println("|" + "=".repeat(61) + "|" );
     }
 
-    static boolean isValidName(String name) {
-        for(int i = 0;i < name.length();i ++) {
-            char c = name.charAt(i);
-            if(!(c >= '0' && c <= '9') &&
-                    !(c >= 'a' && c <= 'z') &&
-                    !(c >= 'A' && c <= 'Z') &&
-                    c != '.' && c != ' ') {
-                return false;
-            }
-            if(i < name.length() - 1 && c == ' ' && name.charAt(i+1) == ' ') return false;
-        }
-        return true;
-    }
 
     static void AddNewStock(StockListManager stockManager) {
-        String[] data = new String[4];
         Scanner sc = new Scanner(System.in);
         System.out.println("新規株式銘柄マスタを登録します");
 
         //输入名字
+        ProductName productName;
         while(true) {
             System.out.print("銘柄名> ");
-            String productName;
-            productName = sc.nextLine();
-            if(productName.equals("exit")) //输入exit退出
+            String input = sc.nextLine();
+            if(input.equals("exit")) //输入exit退出
                 return;
-            if(stockManager.containsStockByName(productName)) {
-                System.out.println("ERROR: この銘柄名はすでに存在している。");
-            } else if(!isValidName(productName)) {
+            try {
+                productName = new ProductName(input);
+                if(stockManager.containsStockByName(productName)) {
+                    System.out.println("ERROR: この銘柄名はすでに存在している。");
+                } else break;
+            } catch (Exception e) {
                 System.out.println("不正な銘柄名の入力。「a-z, A-Z, 0-9, .と非連続スペース」");
-            } else {
-                data[1] = productName;
-                break;
             }
         }
 
         //输入code
+        String code;
         while(true){
             System.out.print("銘柄コード> ");
-            String code = sc.nextLine();
+            code = sc.nextLine();
             if(code.equals("exit"))
                 return;
             if(code.length() == 4 &&
@@ -140,45 +127,49 @@ public class Main {
                     code.charAt(3) >= '0' && code.charAt(3) <= '9') {
                 if(stockManager.containsStockByCode(code)){
                     System.out.println("ERROR: この銘柄コードはすでに存在している。");
-                } else {
-                    data[0] = code;
-                    break;
-                }
+                } else break;
             } else {
                 System.out.println("ERROR: 銘柄コードは4桁の半角数字で入力してください。");
             }
         }
 
         //输入market
+        Market market;
         while(true){
             System.out.print("上場市場> ");
-            String market = sc.nextLine();
-            if(market.equals("exit"))
+            String input = sc.nextLine();
+            if(input.equals("exit"))
                 return;
-            if(market.equals("PRIME") || market.equals("STANDARD") || market.equals("GROWTH")) {
-                data[2] = market;
+            try {
+                market = Market.parseMarket(input);
                 break;
-            } else {
+            }catch (Exception e) {
                 System.out.println("ERROR: 上場市場はPRIME、STANDARD、GROWTHのいずれかを入力してください。");
             }
         }
 
         //输入shares
+        long sharesIssued;
         while(true) {
-            System.out.print("発行済み株式数> ");
-            String shares = sc.nextLine();
-            if (shares.equals("exit"))
+            System.out.print("発行済み株式数(0-2,000,000,000)> ");
+            String input = sc.nextLine();
+            if (input.equals("exit"))
                 return;
-            try {
-                Integer.parseInt(shares);
-                data[3] = shares;
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("ERROR: 発行済み株式数は整数で入力してください。");
+            if(input.length() > 10) {
+                System.out.println("範囲内の正の整数を入力してください。");
+            } else {
+                try {
+                    sharesIssued = Long.parseUnsignedLong(input);
+                    if(sharesIssued < 0 || sharesIssued > 2000000000) {
+                        System.out.println("範囲内の正の整数を入力してください。");
+                    } else break;
+                } catch (NumberFormatException e) {
+                    System.out.println("ERROR: 発行済み株式数は正の整数で入力してください。");
+                }
             }
         }
-        stockManager.AddStock(new Stock(data));
-        System.out.println(data[1] + "を新規銘柄として登録しました");
+        stockManager.AddStock(new Stock(code, productName, market, sharesIssued));
+        System.out.println(productName + "を新規銘柄として登録しました");
     }
 
     static void AddNewTransAction(StockListManager stockManager, StockTradeManager transactionManager) {
@@ -205,15 +196,20 @@ public class Main {
             }
         }
 
-        String productName;
+       ProductName productName;
         while(true) {
             System.out.print("銘柄名> ");
-            productName = sc.nextLine();
-            if(productName.equals("exit"))
+            String input = sc.nextLine();
+            if(input.equals("exit"))
                 return;
-            if(!stockManager.containsStockByName(productName)) {
-                System.out.println("ERROR: 入力された銘柄名は登録されてない。");
-            } else break;
+            try {
+                productName = new ProductName(input);
+                if(!stockManager.containsStockByName(productName)) {
+                    System.out.println("ERROR: 入力された銘柄名は登録されてない。");
+                } else break;
+            } catch (Exception e) {
+               System.out.println("不正な銘柄名の入力。「a-z, A-Z, 0-9, .と非連続スペース」");
+            }
         }
         String code = stockManager.getByName(productName).getCode();
 

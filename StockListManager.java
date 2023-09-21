@@ -25,11 +25,17 @@ public class StockListManager {
         reader.readLine();
         String entry;
         while((entry = reader.readLine()) != null) { //逐行读数据
-            String[] data = entry.split("\t");
-            Stock stock = new Stock(data);
-            stocks.add(stock);
-            codeIndex.put(stock.getCode(), stock);
-            nameIndex.put(stock.getProductName(), stock);
+            try {
+                String[] data = entry.split("\t");
+                String code = data[0];
+                ProductName productName = new ProductName(data[1]);
+                Market market = Market.parseMarket(data[2]);
+                long sharesIssued = Long.parseLong(data[3]);
+                Stock stock = new Stock(code, productName, market, sharesIssued);
+                stocks.add(stock);
+                codeIndex.put(stock.getCode(), stock);
+                nameIndex.put(stock.getProductName(), stock);
+            }catch (Exception e) {}
         }
     }
 
@@ -49,10 +55,10 @@ public class StockListManager {
     public boolean containsStockByCode(String code) {
         return codeIndex.containsKey(code);
     }
-    public boolean containsStockByName(String name) {
-        return nameIndex.containsKey(name);
+    public boolean containsStockByName(ProductName name) {
+        return nameIndex.containsKey(name.getValue());
     }
-    public Stock getByName(String name) {
-        return nameIndex.get(name);
+    public Stock getByName(ProductName name) {
+        return nameIndex.get(name.getValue());
     }
 }
