@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.*;
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main_step_3 {
     static String stockDatabaseFile = "Database.csv";
@@ -105,11 +107,9 @@ public class Main_step_3 {
             code = sc.nextLine();
             if (code.equals("exit"))
                 return;
-            if (code.length() == 4 &&
-                    code.charAt(0) >= '0' && code.charAt(0) <= '9' &&
-                    code.charAt(1) >= '0' && code.charAt(1) <= '9' &&
-                    code.charAt(2) >= '0' && code.charAt(2) <= '9' &&
-                    code.charAt(3) >= '0' && code.charAt(3) <= '9') {
+            Pattern pattern = Pattern.compile("^[0-9]{4}$");
+            Matcher matcher = pattern.matcher(code);
+            if(matcher.matches()) {
                 if (stockManager.containsStockByCode(code)) {
                     System.out.println("ERROR: この銘柄コードはすでに存在している。");
                 } else break;
