@@ -10,7 +10,7 @@ public class ProductName {
             throw new Exception("null");
     }
     private boolean isValidName(String name) {
-        Pattern pattern = Pattern.compile("^(?!.*  )[a-zA-Z0-9. ]+$");
+        Pattern pattern = Pattern.compile("^(?!.*  )[a-zA-Z0-9. ,]+$");
         Matcher matcher = pattern.matcher(name);
         return matcher.matches();
     }
