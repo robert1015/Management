@@ -306,7 +306,8 @@ public class Main {
             else
                 System.out.print("| " + trade.getProductName() + " ".repeat(26 - trade.getProductName().length()));
             DecimalFormat dfAmount = new DecimalFormat("#,###");
-            System.out.printf("| %-8s | %13s | %18s |\n", trade.isSell()?"SELL":"BUY ", dfAmount.format(trade.getAmount()),trade.getPricePerShare().setScale(2));
+            DecimalFormat dfPrice = new DecimalFormat("#,##0.00");
+            System.out.printf("| %-8s | %13s | %18s |\n", trade.isSell()?"SELL":"BUY ", dfAmount.format(trade.getAmount()),dfPrice.format(trade.getPricePerShare().floatValue()));
         }
         System.out.println("|" + "=".repeat(101) + "|");
     }
