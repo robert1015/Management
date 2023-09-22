@@ -289,7 +289,7 @@ public class Main {
     }
 
     static void ShowAllTrades(StockTradeManager tradeManager) {
-        SortedSet<Trade> tradeList = tradeManager.LoadAllTrades();
+        List<Trade> tradeList = tradeManager.LoadAllTrades();
         if (tradeList.size() == 0) {
             System.out.println("ERROR: 登録された取引記録はありません。");
             return;

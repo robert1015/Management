@@ -1,11 +1,8 @@
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.SocketTimeoutException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.InvalidPropertiesFormatException;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class StockTradeManager {
 
@@ -29,8 +26,8 @@ public class StockTradeManager {
         }
     }
 
-    public SortedSet<Trade> LoadAllTrades(){
-        SortedSet<Trade> tradeList = new TreeSet<>(new Trade.CompareByDate());;
+    public List<Trade> LoadAllTrades(){
+        List<Trade> tradeList = new ArrayList<>();;
         try {
             BufferedReader reader;
             reader = new BufferedReader(new FileReader(this.tradeDatabaseFile)); //读文件
@@ -47,6 +44,7 @@ public class StockTradeManager {
                 Trade trade = new Trade(time, productName, code, tradeType, amount, pricePerShare);
                 tradeList.add(trade);
             }
+            tradeList.sort(new Trade.CompareByDate());
         } catch (IOException e) {
             System.out.println("ERROR: データベースのファイルは存在しません。");
         }
