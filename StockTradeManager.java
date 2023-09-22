@@ -1,5 +1,11 @@
 import java.io.*;
+import java.math.BigDecimal;
+import java.net.SocketTimeoutException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.InvalidPropertiesFormatException;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class StockTradeManager {
 
@@ -9,7 +15,7 @@ public class StockTradeManager {
         this.tradeDatabaseFile = tradeDatabaseFile;
         FileReader reader = new FileReader(tradeDatabaseFile);
     }
-    public void AddNewTransaction(Trade log) {
+    public void AddNewTrade(Trade log) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(tradeDatabaseFile, true));
             writer.newLine();
@@ -21,5 +27,29 @@ public class StockTradeManager {
         } catch (IOException e) {
             System.out.println("ERROR: データベースのファイルは存在しません。");
         }
+    }
+
+    public SortedSet<Trade> LoadAllTrades(){
+        SortedSet<Trade> tradeList = new TreeSet<>(new Trade.CompareByDate());;
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(this.tradeDatabaseFile)); //读文件
+            reader.readLine();
+            String entry;
+            while ((entry = reader.readLine()) != null) { //逐行读数据
+                String[] data = entry.split("\t");
+                LocalDateTime time = LocalDateTime.parse(data[0], formatter);
+                String code = data[1];
+                ProductName productName = new ProductName(data[2]);
+                boolean tradeType = data[3].equals("BUY") ? true : false;
+                long amount = Long.parseUnsignedLong(data[4]);
+                BigDecimal pricePerShare = BigDecimal.valueOf(Double.parseDouble(data[5]));
+                Trade trade = new Trade(time, productName, code, tradeType, amount, pricePerShare);
+                tradeList.add(trade);
+            }
+        } catch (IOException e) {
+            System.out.println("ERROR: データベースのファイルは存在しません。");
+        }
+        return tradeList;
     }
 }

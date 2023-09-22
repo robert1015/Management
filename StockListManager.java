@@ -42,16 +42,16 @@ public class StockListManager {
     }
 
     public void AddStock(Stock stock) {
-        stocks.add(stock);
-        codeIndex.put(stock.getCode(), stock);
-        nameIndex.put(stock.getProductName(), stock);
         try {
+            stocks.add(stock);
+            codeIndex.put(stock.getCode(), stock);
+            nameIndex.put(stock.getProductName(), stock);
             BufferedWriter writer = new BufferedWriter(new FileWriter(stockDatabaseFile, true));
             writer.newLine();
             writer.write(stock.getCode() + "\t" + stock.getProductName() + "\t" + stock.getMarket() + "\t" + stock.getSharesIssued());
             writer.close();
         } catch (IOException e) {
-            System.out.println("データベースのファイルは存在しません。");
+            System.out.println("ERROR: データベースのファイルは存在しません。");
         }
     }
     public boolean containsStockByCode(String code) {

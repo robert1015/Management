@@ -1,6 +1,7 @@
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.util.Comparator;
+import java.util.SortedSet;
 
 
 public class Trade {
@@ -8,13 +9,13 @@ public class Trade {
     private ProductName productName;
     private String code;
     private boolean tradeType; //sell: false, buy: true
-    private int amount;
+    private long amount;
     private BigDecimal pricePerShare;
     public Trade(LocalDateTime timestamp,
                                   ProductName productName,
                                   String code,
                                   boolean tradeType,
-                                  int amount,
+                                  long amount,
                                   BigDecimal pricePerShare) {
         this.timestamp = timestamp;
         this.code = code;
@@ -36,7 +37,7 @@ public class Trade {
     }
 
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 
@@ -50,5 +51,11 @@ public class Trade {
     }
     public boolean isBuy() {
         return tradeType;
+    }
+
+    public static class CompareByDate implements Comparator<Trade> {
+        public int compare(Trade trade1, Trade trade2) {
+            return trade1.getTimestamp().compareTo(trade2.getTimestamp());
+        }
     }
 }

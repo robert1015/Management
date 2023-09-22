@@ -37,6 +37,7 @@ public class Main {
             System.out.println("  1. 銘柄マスタ一覧表示");
             System.out.println("  2. 銘柄マスタ新規登録");
             System.out.println("  3. 取引登録");
+            System.out.println("  4. 取引一覧表示");
             System.out.println("  9. アプリケーションを終了する");
             while(true) {
                 System.out.print("入力してください: ");
@@ -61,7 +62,12 @@ public class Main {
                     break;
                 }  else if(inputNum == 3) {
                     System.out.println("「取引登録」が選択されました。");
-                    AddNewTransAction(stockManager, tradeManager);
+                    AddNewTrade(stockManager, tradeManager);
+                    System.out.println("---");
+                    break;
+                }  else if(inputNum == 4) {
+                    System.out.println("「取引一覧表示」が選択されました。");
+                    ShowAllTrades(tradeManager);
                     System.out.println("---");
                     break;
                 } else if(inputNum == 9) {
@@ -175,7 +181,7 @@ public class Main {
     }
 
 
-    static void AddNewTransAction(StockListManager stockManager, StockTradeManager transactionManager) {
+    static void AddNewTrade(StockListManager stockManager, StockTradeManager transactionManager) {
         Scanner sc = new Scanner(System.in);
         System.out.println("新規取引を登録します");
         LocalDateTime time;
@@ -232,14 +238,14 @@ public class Main {
             }
         }
 
-        int amount;
+        long amount;
         while (true) {
             System.out.print("数量「100株単位, 上限は223,372,036,854,775,800」> ");
             String input = sc.nextLine();
             if (input.equals("exit"))
                 return;
             try {
-                amount = Integer.parseInt(input);
+                amount = Long.parseUnsignedLong(input);
                 if(amount % 100 != 0) {
                     System.out.println("ERROR: 取引数量は100株単位で扱わなければならない。");
                 } else if(amount <= 0) { //交易数量是个正数
@@ -277,9 +283,32 @@ public class Main {
             }
         }
         Trade log = new Trade(time, productName, code, tradeType, amount, pricePerShare);
-        transactionManager.AddNewTransaction(log);
+        transactionManager.AddNewTrade(log);
 
         System.out.println("取引記録を新規銘柄として登録しました");
+    }
+
+    static void ShowAllTrades(StockTradeManager tradeManager) {
+        SortedSet<Trade> tradeList = tradeManager.LoadAllTrades();
+        if (tradeList.size() == 0) {
+            System.out.println("ERROR: 登録された取引記録はありません。");
+            return;
+        }
+        System.out.println("|" + "=".repeat(101) + "|");
+        // 4+2 25+2 8+2 15+2
+        System.out.println("| Date and Time    | Code | Product Name              | BUY/SELL | amount        | PricePerShare      |");
+        System.out.println("|------------------+------+---------------------------+----------+---------------|--------------------|");
+        for(Trade trade : tradeList) { //逐行读数据
+            System.out.print("| " + trade.getTimestamp().format(StockTradeManager.formatter) + " ");
+            System.out.print("| " + trade.getCode() + " ");
+            if (trade.getProductName().length() > 22)
+                System.out.print("| " + trade.getProductName().substring(0, 22) + "... ");
+            else
+                System.out.print("| " + trade.getProductName() + " ".repeat(26 - trade.getProductName().length()));
+            DecimalFormat dfAmount = new DecimalFormat("#,###");
+            System.out.printf("| %-8s | %13s | %18s |\n", trade.isSell()?"SELL":"BUY ", dfAmount.format(trade.getAmount()),trade.getPricePerShare().setScale(2));
+        }
+        System.out.println("|" + "=".repeat(101) + "|");
     }
 
 }
