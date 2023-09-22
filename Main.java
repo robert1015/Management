@@ -176,7 +176,7 @@ public class Main {
                 }
             }
         }
-        stockManager.AddStock(new Stock(code, productName, market, sharesIssued));
+        stockManager.addStock(new Stock(code, productName, market, sharesIssued));
         System.out.println(productName.getValue() + "を新規銘柄として登録しました");
     }
 
@@ -283,13 +283,13 @@ public class Main {
             }
         }
         Trade log = new Trade(time, productName, code, tradeType, amount, pricePerShare);
-        transactionManager.AddNewTrade(log);
+        transactionManager.addNewTrade(log);
 
         System.out.println("取引記録を新規銘柄として登録しました");
     }
 
     static void ShowAllTrades(StockTradeManager tradeManager) {
-        List<Trade> tradeList = tradeManager.LoadAllTrades();
+        List<Trade> tradeList = tradeManager.loadAllTrades();
         if (tradeList.size() == 0) {
             System.out.println("ERROR: 登録された取引記録はありません。");
             return;

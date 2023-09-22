@@ -12,7 +12,7 @@ public class StockTradeManager {
         this.tradeDatabaseFile = tradeDatabaseFile;
         FileReader reader = new FileReader(tradeDatabaseFile);
     }
-    public void AddNewTrade(Trade log) {
+    public void addNewTrade(Trade log) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(tradeDatabaseFile, true));
             writer.newLine();
@@ -26,7 +26,7 @@ public class StockTradeManager {
         }
     }
 
-    public List<Trade> LoadAllTrades(){
+    public List<Trade> loadAllTrades(){
         List<Trade> tradeList = new ArrayList<>();;
         try {
             BufferedReader reader;

@@ -19,7 +19,7 @@ public class StockListManager {
         return stocks;
     }
 
-    private void LoadAllStocks() throws IOException {
+    private void loadAllStocks() throws IOException {
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(this.stockDatabaseFile)); //读文件
         reader.readLine();
@@ -41,7 +41,7 @@ public class StockListManager {
         }
     }
 
-    public void AddStock(Stock stock) {
+    public void addStock(Stock stock) {
         try {
             stocks.add(stock);
             codeIndex.put(stock.getCode(), stock);
