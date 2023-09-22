@@ -150,7 +150,7 @@ public class Main_step_3 {
                 }
             }
         }
-        stockManager.AddStock(new Stock(code, productName, market, sharesIssued));
+        stockManager.addStock(new Stock(code, productName, market, sharesIssued));
         System.out.println(productName.getValue() + "を新規銘柄として登録しました");
     }
 }

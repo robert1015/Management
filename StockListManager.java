@@ -12,7 +12,7 @@ public class StockListManager {
         stocks = new ArrayList<>();
         codeIndex = new HashMap<>();
         nameIndex = new HashMap<>();
-        LoadAllStocks();
+        loadAllStocks();
     }
 
     public List<Stock> getStocks() {
