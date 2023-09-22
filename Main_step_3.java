@@ -16,9 +16,6 @@ public class Main_step_3 {
         } catch (IOException e) {
             System.out.println("ERROR: データベースのファイルは存在しません。");
             return;
-        } catch (Exception e) {
-            System.out.println("ERROR: データベースの読み込みに失敗しました。");
-            return;
         }
         while (running) {
             System.out.println("操作するメニューを選んでください。");
@@ -95,7 +92,7 @@ public class Main_step_3 {
                 if (stockManager.containsStockByName(productName)) {
                     System.out.println("ERROR: この銘柄名はすでに存在している。");
                 } else break;
-            } catch (Exception e) {
+            } catch (InvalidPropertiesFormatException e) {
                 System.out.println("不正な銘柄名の入力。「a-z, A-Z, 0-9, .と非連続スペース」");
             }
         }
@@ -128,7 +125,7 @@ public class Main_step_3 {
             try {
                 market = Market.parseMarket(input);
                 break;
-            } catch (Exception e) {
+            } catch (InvalidPropertiesFormatException e) {
                 System.out.println("ERROR: 上場市場はPRIME、STANDARD、GROWTHのいずれかを入力してください。");
             }
         }
@@ -136,7 +133,7 @@ public class Main_step_3 {
         //输入shares
         long sharesIssued;
         while (true) {
-            System.out.print("発行済み株式数(0-9,999,999,999)> ");
+            System.out.print("発行済み株式数(0-9,223,372,036,854,775,807)> "); //long数据类型的最大值
             String input = sc.nextLine();
             if (input.equals("exit"))
                 return;
@@ -145,7 +142,7 @@ public class Main_step_3 {
             } else {
                 try {
                     sharesIssued = Long.parseUnsignedLong(input);
-                    if (sharesIssued < 0 || sharesIssued > 9999999999L) {
+                    if (sharesIssued < 0) {
                         System.out.println("範囲内の正の整数を入力してください。");
                     } else break;
                 } catch (NumberFormatException e) {

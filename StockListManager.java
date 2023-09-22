@@ -7,7 +7,7 @@ public class StockListManager {
     private final Map<String, Stock> codeIndex;
     private final Map<String, Stock> nameIndex;
 
-    StockListManager(String stockDatabaseFile) throws Exception {
+    StockListManager(String stockDatabaseFile) throws IOException {
         this.stockDatabaseFile = stockDatabaseFile;
         stocks = new ArrayList<>();
         codeIndex = new HashMap<>();
@@ -19,7 +19,7 @@ public class StockListManager {
         return stocks;
     }
 
-    private void LoadAllStocks() throws Exception {
+    private void LoadAllStocks() throws IOException {
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(this.stockDatabaseFile)); //读文件
         reader.readLine();
@@ -35,7 +35,9 @@ public class StockListManager {
                 stocks.add(stock);
                 codeIndex.put(stock.getCode(), stock);
                 nameIndex.put(stock.getProductName(), stock);
-            }catch (Exception e) {}
+            }catch (InvalidPropertiesFormatException e) {
+                System.out.println("ERROR: データ読み込みエラー"); //空白的原因是默认从数据库里读出来的都是合法数据，这里加一句报错吧。
+            }
         }
     }
 
