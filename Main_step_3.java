@@ -136,7 +136,7 @@ public class Main_step_3 {
         //输入shares
         long sharesIssued;
         while (true) {
-            System.out.print("発行済み株式数(0-2,000,000,000)> ");
+            System.out.print("発行済み株式数(0-9,999,999,999)> ");
             String input = sc.nextLine();
             if (input.equals("exit"))
                 return;
@@ -145,7 +145,7 @@ public class Main_step_3 {
             } else {
                 try {
                     sharesIssued = Long.parseUnsignedLong(input);
-                    if (sharesIssued < 0 || sharesIssued > 2000000000) {
+                    if (sharesIssued < 0 || sharesIssued > 9999999999L) {
                         System.out.println("範囲内の正の整数を入力してください。");
                     } else break;
                 } catch (NumberFormatException e) {
@@ -154,7 +154,7 @@ public class Main_step_3 {
             }
         }
         stockManager.AddStock(new Stock(code, productName, market, sharesIssued));
-        System.out.println(productName + "を新規銘柄として登録しました");
+        System.out.println(productName.getValue() + "を新規銘柄として登録しました");
     }
 }
 
