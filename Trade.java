@@ -55,7 +55,7 @@ public class Trade {
 
     public static class CompareByDate implements Comparator<Trade> {
         public int compare(Trade trade1, Trade trade2) {
-            return trade1.getTimestamp().compareTo(trade2.getTimestamp());
+            return -trade1.getTimestamp().compareTo(trade2.getTimestamp());
         }
     }
 }
