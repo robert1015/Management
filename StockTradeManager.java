@@ -19,7 +19,7 @@ public class StockTradeManager {
             writer.write(entry);
             writer.close();
         } catch (IOException e) {
-            System.out.println("データベースのファイルは存在しません。");
+            System.out.println("ERROR: データベースのファイルは存在しません。");
         }
     }
 }
